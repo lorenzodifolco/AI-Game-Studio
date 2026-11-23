@@ -1,0 +1,63 @@
+{
+  "$comment": "Per-game pipeline. Stages run in order. A stage is complete when every exit criterion passes; if it has a gate, the gate must also be approved (or its policy in config.json must be 'auto'). 'by' names the skill that produces the artifact. Criterion types: file, headings, glob, checklist, contains, tests. Paths are relative to games/<slug>/.",
+  "stages": [
+    {
+      "id": "design",
+      "summary": "Game design document + backlog from the greenlit concept",
+      "exit": [
+        {"type": "headings", "path": "design/gdd.md", "by": "design-game",
+         "headings": ["Pitch", "Design Pillars", "Core Loop", "Controls", "Progression", "Economy and Monetization", "Art Direction", "Audio", "Scope", "Success Metrics", "Prototype Hypothesis"]},
+        {"type": "file", "path": "design/backlog.md", "by": "design-game"}
+      ],
+      "gate": null
+    },
+    {
+      "id": "prototype",
+      "summary": "Playable greybox of the core loop + evaluation report",
+      "exit": [
+        {"type": "file", "path": "project/project.godot", "by": "prototype"},
+        {"type": "tests", "by": "prototype"},
+        {"type": "contains", "path": "qa/prototype-report.md", "by": "prototype",
+         "pattern": "^recommendation:\\s*\\**\\s*(GO|ITERATE|KILL)", "label": "'Recommendation: GO|ITERATE|KILL' line"}
+      ],
+      "gate": "prototype"
+    },
+    {
+      "id": "production",
+      "summary": "Feature-complete game: every backlog item implemented and tested",
+      "exit": [
+        {"type": "glob", "pattern": "project/tests/test_*.gd", "by": "develop"},
+        {"type": "checklist", "path": "design/backlog.md", "by": "develop"},
+        {"type": "tests", "by": "develop"}
+      ],
+      "gate": null
+    },
+    {
+      "id": "qa",
+      "summary": "Full QA pass with verdict",
+      "exit": [
+        {"type": "tests", "by": "qa"},
+        {"type": "contains", "path": "qa/qa-report.md", "by": "qa",
+         "pattern": "^verdict:\\s*\\**\\s*PASS", "label": "'Verdict: PASS' line"}
+      ],
+      "gate": null
+    },
+    {
+      "id": "launch",
+      "summary": "Store listing, marketing kit and release checklist ready",
+      "exit": [
+        {"type": "headings", "path": "marketing/store-listing.md", "by": "marketing-kit",
+         "headings": ["Title", "Short Description", "Full Description", "Keywords", "Screenshots", "Feature Graphic"]},
+        {"type": "file", "path": "marketing/launch-plan.md", "by": "marketing-kit"},
+        {"type": "checklist", "path": "release/release-checklist.md", "by": "release-prep"}
+      ],
+      "gate": "release"
+    },
+    {
+      "id": "released",
+      "summary": "Human signed and uploaded the build. Terminal stage.",
+      "exit": [],
+      "gate": null
+    }
+  ]
+}

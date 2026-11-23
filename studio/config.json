@@ -1,0 +1,15 @@
+{
+  "studio_name": "AI Game Studio",
+  "package_prefix": "com.example.aistudio",
+  "engine": "godot4",
+  "godot_bin": "",
+  "max_active_games": 1,
+  "research_max_age_days": 30,
+  "max_actions_per_run": 3,
+  "auto_commit": true,
+  "commit_trailer": "Co-Authored-By: Claude <noreply@anthropic.com>",
+  "gates": {
+    "prototype": "human",
+    "release": "human"
+  }
+}

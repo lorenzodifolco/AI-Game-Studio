@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Skill",
+      "Agent",
+      "Bash(python scripts/studio.py *)",
+      "Bash(python -m unittest *)",
+      "Bash(python -m json.tool *)",
+      "Bash(grep *)",
+      "Bash(git status *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git tag)",
+      "Bash(git tag -l *)",
+      "Bash(git branch)",
+      "Bash(git switch *)",
+      "Bash(git worktree *)",
+      "Bash(date *)",
+      "Bash(ls *)",
+      "WebSearch",
+      "WebFetch",
+      "Edit(./games/**)",
+      "Edit(./studio/**)",
+      "Edit(./.claude/agent-memory/**)"
+    ],
+    "ask": [
+      "Bash(git push *)"
+    ],
+    "deny": [
+      "Bash(python scripts/studio.py greenlight *)",
+      "Bash(python scripts/studio.py approve *)",
+      "Bash(python scripts/studio.py kill *)",
+      "Read(./**/*.jks)",
+      "Read(./**/*.keystore)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./studio/secrets/**)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          { "type": "command", "command": "python \"${CLAUDE_PROJECT_DIR}/scripts/studio.py\" status --brief", "timeout": 30 }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          { "type": "command", "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_bash.py\"", "timeout": 15 }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/protect_files.py\"", "timeout": 15 }
+        ]
+      }
+    ]
+  }
+}

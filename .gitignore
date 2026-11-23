@@ -1,0 +1,25 @@
+# Godot
+.godot/
+*.translation
+games/*/build/
+*.apk
+*.aab
+*.idsig
+
+# Secrets (human-managed; never commit)
+*.jks
+*.keystore
+.env
+.env.*
+studio/secrets/
+
+# Local / generated
+studio/logs/
+tools/
+__pycache__/
+*.pyc
+.claude/settings.local.json
+.claude/agent-memory-local/
+CLAUDE.local.md
+.DS_Store
+Thumbs.db
